@@ -13,8 +13,9 @@ const dewormedInput = document.getElementById("input-dewormed");
 const sterilizedInput = document.getElementById("input-sterilized");
 const submitBtn = document.getElementById("submit-btn");
 const healthyBtn = document.getElementById("healthy-btn");
-const deleteBtn = document.getElementById("btn-danger");
+const calcBMIBtn = document.getElementById("bmi-btn");
 const tableBodyEl = document.getElementById("tbody");
+
 // Data mẫu
 const data1 = {
   id: "P001",
@@ -28,6 +29,7 @@ const data1 = {
   vaccinated: true,
   dewormed: true,
   sterilized: true,
+  bmi: "?",
   date: new Date(2022, 2, 1),
 };
 const data2 = {
@@ -42,12 +44,15 @@ const data2 = {
   vaccinated: false,
   dewormed: false,
   sterilized: false,
+  bmi: "?",
   date: new Date(2022, 2, 2),
 };
 const petArr = [];
 petArr.push(data1);
 petArr.push(data2);
+
 renderTableData(petArr);
+
 // Submit
 submitBtn.addEventListener("click", function () {
   // Lấy input
@@ -63,6 +68,7 @@ submitBtn.addEventListener("click", function () {
     vaccinated: vaccinatedInput.checked,
     dewormed: dewormedInput.checked,
     sterilized: sterilizedInput.checked,
+    bmi: "?",
     date: new Date(),
   };
 
@@ -139,7 +145,7 @@ function renderTableData(petArr) {
                 <td>${petArr[i].age}</td>
                 <td>${petArr[i].type}</td>
                 <td>${petArr[i].weight} kg</td>
-                <td>${petArr[i].length}</td>
+                <td>${petArr[i].length} cm</td>
                 <td>${petArr[i].breed}</td>
                 <td>
                   <i class="bi bi-square-fill" 
@@ -165,7 +171,8 @@ function renderTableData(petArr) {
                       ? "bi-check-circle-fill"
                       : "bi-x-circle-fill"
                   }"></i>
-                </td>
+                  </td>
+                  <td>${petArr[i].bmi}</td>
                 <td>
                 ${petArr[i].date.getDate()}/
                 ${petArr[i].date.getMonth()}/
@@ -202,9 +209,51 @@ function clearInput() {
   typeInput.value = "Select type";
   weightInput.value = "";
   lengthInput.value = "";
-  colorInput.value = "black";
+  colorInput.value = "#000000";
   breedInput.value = "Select Breed";
   vaccinatedInput.checked = false;
   dewormedInput.checked = false;
   sterilizedInput.checked = false;
 }
+
+// Hiển thị thú cưng khỏe mạnh
+
+let healthyCheck = true;
+healthyBtn.addEventListener("click", function () {
+  if (healthyCheck === true) {
+    // Lọc thú cưng khỏe mạnh
+    const healthyPetArr = [];
+    for (let i = 0; i < petArr.length; i++) {
+      if (
+        petArr[i].vaccinated === true &&
+        petArr[i].dewormed === true &&
+        petArr[i].sterilized === true
+      ) {
+        healthyPetArr.push(petArr[i]);
+      }
+    }
+    // Hiển thị ra màn hình
+    renderTableData(healthyPetArr);
+    // Đổi tên nút thành 'Show all pet'
+    healthyBtn.textContent = "Show All Pet";
+    healthyCheck = false;
+  } else {
+    renderTableData(petArr);
+    healthyBtn.textContent = "Show Heahthy Pet";
+    healthyCheck = true;
+  }
+});
+
+// Tính BMI
+calcBMIBtn.addEventListener("click", function () {
+  // Cập nhật BMI
+  for (let i = 0; i < petArr.length; i++) {
+    let type = petArr[i].type;
+    petArr[i].bmi =
+      type === "Dog"
+        ? ((petArr[i].weight * 703) / petArr[i].length ** 2).toFixed(2)
+        : ((petArr[i].weight * 886) / petArr[i].length ** 2).toFixed(2);
+  }
+  // Hiển thị BMI
+  renderTableData(petArr);
+});
