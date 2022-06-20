@@ -54,7 +54,7 @@ const breed4 = {
   type: "Dog",
 };
 
-////////////////  FUNCTION   ////////////////////////
+////////////////////////////////////////
 // Lưu dữ liệu dưới LocalStorage
 
 // Lưu dũ liệu vào petArr (gán dữ liệu để test petArr)

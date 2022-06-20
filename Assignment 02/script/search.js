@@ -82,31 +82,31 @@ findBtn.addEventListener("click", function () {
   let findArr = petArr;
   // Tìm bằng id
   if (idInput.value) {
-    findArr = petArr.filter((pet) => pet.id.includes(idInput.value));
+    findArr = findArr.filter((pet) => pet.id.includes(idInput.value));
   }
   // Tìm bằng name
   if (nameInput.value) {
-    findArr = petArr.filter((pet) => pet.name.includes(nameInput.value));
+    findArr = findArr.filter((pet) => pet.name.includes(nameInput.value));
   }
   // Tìm bằng type
   if (typeInput.value !== "Select Type") {
-    findArr = petArr.filter((pet) => pet.type === typeInput.value);
+    findArr = findArr.filter((pet) => pet.type === typeInput.value);
   }
   // Tìm bằng breed
   if (breedInput.value !== "Select Breed") {
     findArr = petArr.filter((pet) => pet.breed === breedInput.value);
   }
   // Nếu chọn vaccine
-  if (vaccinatedInput.value === true) {
-    findArr = petArr.filter((pet) => pet.vaccinated === true);
+  if (vaccinatedInput.checked === true) {
+    findArr = findArr.filter((pet) => pet.vaccinated === true);
   }
   // Nếu chọn deworm
-  if (dewormedInput.value === true) {
-    findArr = petArr.filter((pet) => pet.dewormed === true);
+  if (dewormedInput.checked === true) {
+    findArr = findArr.filter((pet) => pet.dewormed === true);
   }
   // Nếu chọn Sterillized
-  if (sterilizedInput.value === true) {
-    findArr = petArr.filter((pet) => pet.sterilized === true);
+  if (sterilizedInput.checked === true) {
+    findArr = findArr.filter((pet) => pet.sterilized === true);
   }
   // Hiển thị ra kết quả
   renderTableData(findArr);
