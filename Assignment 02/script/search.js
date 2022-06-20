@@ -66,6 +66,7 @@ function renderTableData(petArr) {
 
 // Hiển thị tất cả các breed đã có
 function renderBreedAll() {
+  breedInput.innerHTML = "<option>Select Breed</option>";
   breedArr.forEach((br) => {
     const option = document.createElement("option");
     option.innerHTML = `${br.breed}`;
@@ -111,5 +112,5 @@ findBtn.addEventListener("click", function () {
   renderTableData(findArr);
 });
 
-// // Hiển thị breed dựa theo type
-// typeInput.addEventListener("click", renderBreed);
+// Hiển thị breed dựa theo type
+typeInput.addEventListener("click", renderBreed);
