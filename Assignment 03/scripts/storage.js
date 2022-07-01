@@ -1,19 +1,5 @@
 "use strict";
 
-// Tạo class user
-class User {
-  constructor(firstName, lastName, username, password, confirmPass) {
-    this.firstname = firstName;
-    this.lastname = lastName;
-    this.username = username;
-    this.password = password;
-    this.confirmPass = confirmPass;
-  }
-}
-////////////////  DATA MẪU   ////////////////////////
-const user1 = new User("David", "Beckham", "davidb", "123456789");
-const user2 = new User("Maria", "Black", "mariab", "123456789");
-
 ////////////////  FUNCTION   ////////////////////////
 // Lấy dữ liệu
 function getFromStorage(key) {
@@ -23,11 +9,24 @@ function getFromStorage(key) {
 function saveToStorage(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
+// Hàm để chuyển từ JS Object sang Class Instance
+function parseUser(userData) {
+  const user = new User(
+    userData.firstname,
+    userData.lastname,
+    userData.username,
+    userData.password,
+    // Thêm 2 thuộc tính này để làm tính năng số 9
+    userData.pagesize,
+    userData.category
+  );
 
-/////////////////////////////////////////////////////
-// Lưu dữ liệu mẫu vào LocalStorage
-if (!getFromStorage("userArr")) {
-  saveToStorage("userArr", [user1, user2]);
+  return user;
 }
+/////////////////////////////////////////////////////
+
 // Lấy dữ liệu từ local storage
-const userArr = getFromStorage("userArr");
+const users = getFromStorage("userArr") ? getFromStorage("userArr") : [];
+let currentUser = getFromStorage("currentUser");
+// Chuyển từ JS Object sang Class Instance
+const userArr = users.map((user) => parseUser(user));

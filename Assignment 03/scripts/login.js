@@ -5,7 +5,7 @@ const passwordInput = document.getElementById("input-password");
 const btnLogin = document.getElementById("btn-submit");
 
 ////////////////  EVENT   ////////////////////////
-let currentUser;
+// Event nút login
 btnLogin.addEventListener("click", function () {
   // Kiểm tra dữ liệu nhập
   let isValidate = true;
@@ -14,14 +14,19 @@ btnLogin.addEventListener("click", function () {
     isValidate = false;
   }
   if (isValidate) {
-    // Tìm user đã có trong userArr hay chưa
+    // Tìm user đã có trong userArr hay chưa?
     currentUser = userArr.find((user) => user.username === usernameInput.value);
-
-    if (currentUser?.password === passwordInput.value) {
-      //lưu thông tin người dùng hiện tại xuống dưới LocalStorage
-      saveToStorage("currentUser", currentUser);
-      //Chuyển về trang Home
-      window.location.href = "../index.html";
+    if (currentUser === undefined) {
+      // Không tìm thấy user
+      alert("User account is unavailable!🤷‍♂️");
+    } else {
+      // Nếu tìm thấy user
+      if (currentUser?.password === passwordInput.value) {
+        //lưu thông tin người dùng hiện tại xuống dưới LocalStorage
+        saveToStorage("currentUser", currentUser);
+        //Chuyển về trang Home
+        window.location.href = "../index.html";
+      }
     }
   }
 });

@@ -26,11 +26,22 @@ function validateData(data) {
     if (data.username === userArr[i].username) {
       alert("This username must be unique!⛔");
       isValidate = false;
+      break;
     }
   }
+  // Phải nhập password
+  if (data.password === "") {
+    alert("Please type password!⛔");
+    isValidate = false;
+  }
+  // Xác nhận password
+  if (confirmInput.value === "") {
+    alert("Please confirm password!⛔");
+    isValidate = false;
+  }
   // Password và Confirm Password phải giống nhau.
-  if (data.password !== data.confirmPass) {
-    alert("Confim password again!⛔");
+  if (data.password !== confirmInput.value) {
+    alert("Confirm password again!⛔");
     isValidate = false;
   }
   // Password phải có nhiều hơn 8 ký tự.
@@ -41,18 +52,8 @@ function validateData(data) {
   return isValidate;
 }
 
-// Hàm để chuyển từ JS Object sang Class Instance
-function parseUser(userData) {
-  const user = new User(
-    userData.firstname,
-    userData.lastname,
-    userData.username,
-    userData.password
-  );
-
-  return user;
-}
 ////////////////  EVENT   ////////////////////////
+// đăng kí tài khoản mới
 btnRegister.addEventListener("click", function () {
   //Lấy dữ liệu nhập từ form
   // Khởi tạo user mới với các dữ liệu hợp lệ
@@ -60,8 +61,7 @@ btnRegister.addEventListener("click", function () {
     firstNameInput.value,
     lastNameInput.value,
     usernameInput.value,
-    passwordInput.value,
-    confirmInput.value
+    passwordInput.value
   );
 
   //Gọi hàm validate để kiểm tra form hợp lệ
