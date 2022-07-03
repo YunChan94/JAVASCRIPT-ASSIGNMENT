@@ -28,5 +28,7 @@ function parseUser(userData) {
 // Lấy dữ liệu từ local storage
 const users = getFromStorage("userArr") ? getFromStorage("userArr") : [];
 let currentUser = getFromStorage("currentUser");
+const todo = getFromStorage("todoArr") ? getFromStorage("todoArr") : [];
 // Chuyển từ JS Object sang Class Instance
 const userArr = users.map((user) => parseUser(user));
+const todoArr = todo.map((todoUser) => parseUser(todoUser));

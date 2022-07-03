@@ -11,10 +11,9 @@ if (currentUser) {
   async function getDataNews(country, page) {
     try {
       const res = await fetch(
-        `https://newsapi.org/v2/top-headlines?country=${country}&page=${page}&apiKey=6ddb04b0ef0047bc924f04d0fd8b3960`
+        `https://newsapi.org/v2/top-headlines?country=${country}&category=${currentUser.category}&pageSize=${currentUser.pagesize}&page=${page}&apiKey=6ddb04b0ef0047bc924f04d0fd8b3960`
       );
       const data = await res.json();
-      console.log(data);
       // Check lỗi khi chạy từ tập tin không thông qua server
       if (data.code === "corsNotAllowed") {
         throw new Error(data.message);
@@ -27,11 +26,10 @@ if (currentUser) {
     }
   }
   getDataNews("us", 1);
-
   // Hàm hiển thị news
   function renderNews(data) {
     // Tổng số bài viết trả về từ web API
-    let totalResults = data.totalResults;
+    const totalNews = data.totalResults;
     // Kiểm tra điều kiện nút previous - next
     checkPrevious();
     checkNext();
@@ -77,11 +75,11 @@ if (currentUser) {
   }
 
   // Hàm kiểm tra nút next
-  function checkNext() {
-    // totalResult/pageSize = số trang hiển thị (làm tròn lên)
+  function checkNext(totalNews) {
+    // totalnews/pagesize = số trang hiển thị (làm tròn lên)
     if (
-      pageNum.textContent ==
-      Number(totalResults / currentUser.pageSize).toFixed() + 1
+      pageNum.textContent ===
+      Number(totalNews / currentUser.pagesize).toFixed() + 1
     ) {
       // Nếu như không thể lấy thêm các bài viết nữa, nút "Next" sẽ bị ẩn đi
       btnNext.style.display = "none";
@@ -92,13 +90,11 @@ if (currentUser) {
   ////////////////  EVENT   ////////////////////////
   // Event nút Previous
   btnPrev.addEventListener("click", function () {
-    const page = Number(pageNum.textContent);
-    getDataNews("us", page - 1);
+    getDataNews("us", pageNum.textContent--);
   });
   // Sự kiện nút Next
   btnNext.addEventListener("click", function () {
-    const page = Number(pageNum.textContent);
-    getDataNews("us", page + 1);
+    getDataNews("us", pageNum.textContent++);
   });
 } else {
   // Thông báo cho người dùng cần đăng nhập vào
@@ -106,4 +102,3 @@ if (currentUser) {
   // Trở về trang login
   window.location.href = "../index.html";
 }
-// `https://newsapi.org/v2/top-headlines?country=${country}&category=${currentUser.category}&pageSize=${currentUser.pageSize}&page=${page}&apiKey=6ddb04b0ef0047bc924f04d0fd8b3960`
