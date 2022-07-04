@@ -1,18 +1,22 @@
 "use strict";
-
-// Chỉ khi người dùng đăng nhập vào mới sử dụng được trang này
 if (currentUser) {
   // Selector
+  const navPagenum = document.getElementById("nav-page-num");
+  const inputQuery = document.getElementById("input-query");
+  const btnSearch = document.getElementById("btn-submit");
+
   const btnPrev = document.getElementById("btn-prev");
   const btnNext = document.getElementById("btn-next");
   const newsContainer = document.getElementById("news-container");
   const pageNum = document.getElementById("page-num");
+
+  let keyword = "";
   ////////////////  FUNCTION   ////////////////////////
   // Hàm lấy dữ liệu từ webAPI
-  async function getDataNews(country, page) {
+  async function getDataNewsbyKeyword(keyword, page) {
     try {
       const res = await fetch(
-        `https://newsapi.org/v2/top-headlines?country=${country}&category=${currentUser.category}&pageSize=${currentUser.pagesize}&page=${page}&apiKey=6ddb04b0ef0047bc924f04d0fd8b3960`
+        `https://newsapi.org/v2/everything?q=${keyword}&sortBy=relevancy&pageSize=${currentUser.pagesize}&page=${page}&apiKey=6ddb04b0ef0047bc924f04d0fd8b3960`
       );
       const data = await res.json();
       // Check lỗi khi chạy từ tập tin không thông qua server
@@ -20,16 +24,14 @@ if (currentUser) {
         throw new Error(data.message);
       }
       // Hiển thị list news
-      renderNews(data);
+      renderNewsbyKeyword(data);
     } catch (err) {
       // Báo lỗi
       alert(`Error: ${err.message}`);
     }
   }
-  getDataNews("us", 1);
-
   // Hàm hiển thị news
-  function renderNews(data) {
+  function renderNewsbyKeyword(data) {
     // Tổng số bài viết trả về từ web API
     const totalNews = data.totalResults;
     // Kiểm tra điều kiện nút previous - next
@@ -87,14 +89,30 @@ if (currentUser) {
     }
   }
   ////////////////  EVENT   ////////////////////////
+  // Event nút search
+  btnSearch.addEventListener("click", function () {
+    // Validate xem người dùng đã nhập từ khóa hay chưa
+    let isValidate = true;
+    if (inputQuery.value.trim() === "") {
+      alert("Please input keywords!⛔");
+      isValidate = false;
+    }
+    if (isValidate) {
+      // Lấy keyword
+      keyword = inputQuery.value;
+      // Lấy data từ web API và hiển thị newslist
+      getDataNewsbyKeyword(keyword, 1);
+    }
+  });
+
   // Event nút Previous
   btnPrev.addEventListener("click", function () {
-    getDataNews("us", --pageNum.textContent);
+    getDataNewsbyKeyword("us", --pageNum.textContent);
   });
 
   // Event nút Next
   btnNext.addEventListener("click", function () {
-    getDataNews("us", ++pageNum.textContent);
+    getDataNewsbyKeyword("us", ++pageNum.textContent);
   });
 } else {
   // Thông báo cho người dùng cần đăng nhập vào

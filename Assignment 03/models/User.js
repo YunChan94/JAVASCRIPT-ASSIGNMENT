@@ -19,7 +19,7 @@ class User {
     this.category = category;
   }
 }
-
+// Tạo Class để chứa các thông tin về Task trong Todo List
 class Task {
   constructor(task, owner, isDone) {
     this.task = task;

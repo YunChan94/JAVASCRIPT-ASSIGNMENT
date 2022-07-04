@@ -8,22 +8,23 @@ if (currentUser) {
   // Kiểm tra input của người dùng
   function validate() {
     let isValidate = true;
+    // Input pageSize không phải là số
     if (Number.isNaN(Number.parseInt(pageSizeInput.value))) {
       alert("Input is not valid!");
-      isValidate = false;
-    }
-    if (categoryInput.value === "General") {
-      alert("Please choose a category!");
       isValidate = false;
     }
     return validate;
   }
   ////////////////  EVENT   ////////////////////////
   btnSetting.addEventListener("click", function () {
+    console.log(pageSizeInput.value);
+
     if (validate()) {
       //Cập nhật giá trị vào currentUser
       currentUser.pagesize = Number.parseInt(pageSizeInput.value);
-      currentUser.category = categoryInput.value;
+      if (categoryInput.value !== "General") {
+        currentUser.category = categoryInput.value;
+      }
       saveToStorage("currentUser", currentUser);
       // Cập nhật vào userArr
       // Tìm vị trí của currentUser trong userArr
