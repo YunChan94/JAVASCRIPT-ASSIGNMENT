@@ -10,15 +10,20 @@ if (currentUser) {
   ////////////////  FUNCTION   ////////////////////////
   // Hàm hiển thị các Task có owner trùng với username của người dùng hiện tại
   function renderTodoList(todo) {
+    const todoArrs = getFromStorage("todoArr");
     let html = "";
+    // Render lại trường hợp khi todoArr []
+    if (todoArrs && todoArrs.length == 0) {
+      todoList.innerHTML = "";
+    }
     // Lọc trong todoArr những task của currentUser
-    todoArr
+    todoArrs
       .filter((todo) => todo.owner === currentUser.username)
       .forEach((todo) => {
         html += `
-        <li class="${todo.isDone ? "checked" : ""}">${
+        <li class="${todo.isDone ? "checked" : ""}"><p>${
           todo.task
-        }<span class="close">×</span></li>
+        }</p><span class="close">×</span></li>
       `;
         todoList.innerHTML = html;
       });
@@ -76,11 +81,11 @@ if (currentUser) {
         const isDelete = confirm("Do you want to delete task?");
         if (isDelete) {
           // Tìm task trong todoArr
-          const index = todoArr.findIndex(
-            (todo) =>
-              todo.owner === currentUser.username &&
-              todo.task === closeEl.textContent.slice(0, -1)
-          );
+          const pTag = closeEl.previousElementSibling.innerHTML;
+          const index = todoArr.findIndex((todo) => {
+            console.log("closeEl", pTag);
+            return todo.owner === currentUser.username && todo.task === pTag;
+          });
           // Xoá task đó khỏi todoArr
           todoArr.splice(index, 1);
           // Cập nhật xuống local Storage
