@@ -10,26 +10,26 @@ if (currentUser) {
   ////////////////  FUNCTION   ////////////////////////
   // Hàm hiển thị các Task có owner trùng với username của người dùng hiện tại
   function renderTodoList(todo) {
-    const todoArrs = getFromStorage("todoArr");
     let html = "";
     // Render lại trường hợp khi todoArr []
-    if (todoArrs && todoArrs.length == 0) {
+    if (todoArr && todoArr.length == 0) {
       todoList.innerHTML = "";
+    } else {
+      // Lọc trong todoArr những task của currentUser
+      todoArr
+        .filter((todo) => todo.owner === currentUser.username)
+        .forEach((todo) => {
+          html += `
+          <li class="${todo.isDone ? "checked" : ""}"><p>${
+            todo.task
+          }</p><span class="close">×</span></li>
+        `;
+          todoList.innerHTML = html;
+        });
+      // Sự kiện toggle task
+      toggleTask();
+      deleteTask();
     }
-    // Lọc trong todoArr những task của currentUser
-    todoArrs
-      .filter((todo) => todo.owner === currentUser.username)
-      .forEach((todo) => {
-        html += `
-        <li class="${todo.isDone ? "checked" : ""}"><p>${
-          todo.task
-        }</p><span class="close">×</span></li>
-      `;
-        todoList.innerHTML = html;
-      });
-    // Sự kiện toggle task
-    toggleTask();
-    deleteTask();
   }
 
   ////////////////  EVENT   ////////////////////////
@@ -56,14 +56,15 @@ if (currentUser) {
     document.querySelectorAll("#todo-list li").forEach(function (liEl) {
       liEl.addEventListener("click", function (e) {
         // Tránh nút delete ra
-        if (e.target != liEl.children[0]) {
+        if (e.target === liEl.children[0]) {
           // Toggle class checked
           liEl.classList.toggle("checked");
+          // Lấy nội dung test chứa task, trong thẻ p
+          const pTag = liEl.children[0].innerHTML;
           // Tìm task vừa check vào
           const todo = todoArr.find(
             (todoItem) =>
-              todoItem.owner === currentUser.username &&
-              todoItem.task === liEl.textContent.slice(0, -1) // Lấy nội dung test chứa task, bỏ dấu x (kí tự cuối của chuỗi)
+              todoItem.owner === currentUser.username && todoItem.task === pTag
           );
           // Thay đổi thuộc tính isDone
           todo.isDone = liEl.classList.contains("checked") ? true : false;
@@ -83,7 +84,6 @@ if (currentUser) {
           // Tìm task trong todoArr
           const pTag = closeEl.previousElementSibling.innerHTML;
           const index = todoArr.findIndex((todo) => {
-            console.log("closeEl", pTag);
             return todo.owner === currentUser.username && todo.task === pTag;
           });
           // Xoá task đó khỏi todoArr
